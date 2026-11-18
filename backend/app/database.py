@@ -2,10 +2,12 @@ from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sess
 from sqlalchemy.orm import DeclarativeBase
 from app.config import settings
 
+# Enforce MySQL connection with connection pooling
 engine = create_async_engine(
     settings.DATABASE_URL,
     echo=False,
-    connect_args={"check_same_thread": False} if "sqlite" in settings.DATABASE_URL else {}
+    pool_pre_ping=True,
+    pool_recycle=3600,
 )
 
 AsyncSessionLocal = async_sessionmaker(
